@@ -3,6 +3,12 @@
     "name": "Purity Guard – A Shield Against Temptation",
     "version": "3.4.0",
     "description": "A shield against temptation, providing Islamic reminders when visiting harmful websites.",
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "purity-guard@suhaybdahir.com",
+            "strict_min_version": "109.0"
+        }
+    },
     "permissions": [
         "tabs",
         "storage",
