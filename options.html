@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purity Guard Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(148, 163, 184, 0.1);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Animated Background */
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.4;
+      animation: float 20s infinite ease-in-out;
+    }
+    .orb-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #4f46e5; animation-delay: 0s; }
+    .orb-2 { bottom: -10%; right: -10%; width: 600px; height: 600px; background: #7c3aed; animation-delay: -5s; }
+    .orb-3 { top: 40%; left: 40%; width: 300px; height: 300px; background: #06b6d4; animation-delay: -10s; opacity: 0.2; }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, -30px); }
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--card-border);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-item {
+      padding: 1rem;
+      border-radius: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 3rem;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.4s ease-out;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #fff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      font-size: 1.1rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #818cf8, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Inputs */
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.875rem 1.5rem;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    /* Lists */
+    .list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .list-item {
+      background: rgba(15, 23, 42, 0.4);
+      padding: 1rem;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--card-border);
+    }
+
+    .list-item:hover {
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.3);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.5);
+    }
+
+    /* Toggle Switch */
+    .toggle-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 16px;
+      margin-bottom: 1rem;
+    }
+
+    .toggle-label {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .toggle-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(51, 65, 85, 0.5);
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    /* Messages */
+    .message {
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      display: none;
+      font-weight: 500;
+    }
+    .message.success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .message.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    /* Victory Journal Styles */
+    .victory-entry {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.2s ease;
+    }
+    .victory-entry:hover {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-2px);
+    }
+    .victory-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .victory-meta strong {
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+    .victory-meta span {
+      color: var(--text-muted);
+      font-size: 0.85em;
+    }
+    .victory-note {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 8px;
+      min-height: 2.5rem;
+    }
+    .add-note-btn {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .add-note-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .add-note-btn:active {
+      transform: translateY(0);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="sidebar">
+    <div class="logo">
+      <img src="icons/logo-128.png" alt="Purity Guard Logo" width="32" height="32">
+      <span>Purity Guard</span>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item active" data-section="dashboard">Dashboard</li>
+      <li class="nav-item" data-section="blocking">Blocking Rules</li>
+      <li class="nav-item" data-section="accountability">Accountability</li>
+      <li class="nav-item" data-section="sadaqah">Sadaqah</li>
+      <li class="nav-item" data-section="settings">Settings</li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="section active">
+      <h1>📊 Dashboard</h1>
+      <p class="subtitle">Your journey to purity at a glance. Track your progress, view your streak, and manage your settings below.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="streakCount">0</div>
+          <div class="stat-label">Current Streak</div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Days since last relapse</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="blockCount">0</div>
+          <div class="stat-label">Sites Blocked</div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Total temptations resisted</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="whitelistCount">0</div>
+          <div class="stat-label">Whitelisted</div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Safe sites always allowed</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="blacklistCount">0</div>
+          <div class="stat-label">Blacklisted</div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Harmful sites always blocked</p>
+        </div>
+      </div>
+
+      <!-- Performance Graph -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📊 Weekly Activity</div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="activityFilter" style="color: var(--text-muted); font-size: 0.9rem;">Time Range:</label>
+            <select id="activityFilter" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(71, 85, 105, 0.5); color: #e2e8f0; padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; cursor: pointer;">
+              <option value="7">Last 7 Days</option>
+              <option value="14">Last 14 Days</option>
+              <option value="30">Last 30 Days</option>
+              <option value="90">Last 3 Months</option>
+            </select>
+          </div>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          Track your blocking activity over time. Hover over each bar to see the exact number of blocks.
+        </p>
+        <div id="performanceGraphBars" style="height: 200px; display: flex; align-items: flex-end; justify-content: space-around; gap: 10px; padding-top: 20px; padding-bottom: 30px; overflow-x: auto;">
+            <!-- Bars will be dynamically generated by JavaScript -->
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚡ Quick Actions</div>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          <strong>Victory Journal:</strong> View all your logged victories and celebrate your progress!<br>
+          <strong>Reset Stats:</strong> Clear all your statistics and start fresh.<br>
+          <strong>I Relapsed:</strong> If you gave in to temptation, click this to reset your streak and start over.<br>
+          <strong>Export/Import:</strong> Save your settings to a file or load them from a backup.
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <button id="viewVictoryJournalBtn" class="btn btn-success" style="background: linear-gradient(135deg, #10b981, #059669);">📖 Victory Journal</button>
+          <button id="resetStatsBtn" class="btn btn-danger">Reset Stats</button>
+          <button id="relapseBtn" class="btn btn-danger">I Relapsed</button>
+          <button id="exportBtn" class="btn btn-primary">Export Settings</button>
+          <button id="importBtn" class="btn btn-primary">Import Settings</button>
+          <input type="file" id="importFile" style="display: none;">
+        </div>
+        <div id="relapseSuccess" class="message success" style="margin-top: 1rem;">Streak reset. May Allah give you strength.</div>
+      </div>
+    </div>
+
+    <!-- Blocking Rules Section -->
+    <div id="blocking" class="section">
+      <h1>🛡️ Blocking Rules</h1>
+      <p class="subtitle">Control which websites you can and cannot access. Add specific sites to block or allow.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🚫 Blacklist (Blocked Sites)</div>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          Add domains you want to block completely. Type just the domain name (e.g., <code>example.com</code> not <code>https://example.com</code>). These sites will be blocked even if they don't match the built-in filter.
+        </p>
+        <div class="input-group" style="display: flex; gap: 1rem;">
+          <input type="text" id="blacklistInput" placeholder="example.com">
+          <button id="addBlacklistBtn" class="btn btn-primary">Block</button>
+        </div>
+        <div id="blacklistSuccess" class="message success">Added to blacklist.</div>
+        <div id="blacklistError" class="message error">Invalid domain.</div>
+        <div id="blacklistContainer" class="list-container">
+          <!-- Items will be added here by JS -->
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">✅ Whitelist (Allowed Sites)</div>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          Add domains you want to always allow, even if they match the filter. This is useful for legitimate sites that might be accidentally blocked (e.g., health education sites, medical resources).
+        </p>
+        <div class="input-group" style="display: flex; gap: 1rem;">
+          <input type="text" id="whitelistInput" placeholder="example.com">
+          <button id="addWhitelistBtn" class="btn btn-primary">Allow</button>
+        </div>
+        <div id="whitelistSuccess" class="message success">Added to whitelist.</div>
+        <div id="whitelistError" class="message error">Invalid domain.</div>
+        <div id="whitelistContainer" class="list-container">
+          <!-- Items will be added here by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Accountability Section -->
+    <div id="accountability" class="section">
+      <h1>🤝 Accountability Partner</h1>
+      <p class="subtitle">Connect with a trusted friend or family member to keep each other accountable on your journey.</p>
+
+      <div class="card" style="background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3);">
+        <h3 style="margin-bottom: 1rem; color: #c4b5fd;">📖 How It Works</h3>
+        <div style="color: var(--text-muted); line-height: 1.8; font-size: 0.95rem;">
+          <p style="margin-bottom: 1rem;">
+            <strong>1. Create Your Bot:</strong> Message <code>@BotFather</code> on Telegram, send <code>/newbot</code>, name it (e.g., "MyPurityBot"), and get your Bot Token.
+          </p>
+          <p style="margin-bottom: 1rem;">
+            <strong>2. Get Your Telegram User ID:</strong> Message <code>@myidbot</code> on Telegram. It will reply with your User ID (a number like 123456789).
+          </p>
+          <p style="margin-bottom: 1rem;">
+            <strong>3. Get Partner's User ID:</strong> Ask your accountability partner to message <code>@myidbot</code> and get their User ID.
+          </p>
+          <p style="margin-bottom: 1rem;">
+            <strong>4. Start Your Bot:</strong> Both you and your partner must start YOUR bot (the one you created) by clicking "Start" in the chat.
+          </p>
+          <p style="margin-bottom: 0;">
+            <strong>What You'll Get:</strong> Instant alerts via your personal bot when you block sites, daily streak reminders, and comparison reports! 🎉
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📱 Telegram Configuration</div>
+        </div>
+        <div class="input-group">
+          <label>🤖 Your Bot Token (from @BotFather)</label>
+          <input type="password" id="telegramBotTokenInput" placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz">
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+            1. Open Telegram and message <code>@BotFather</code><br>
+            2. Send <code>/newbot</code> and follow instructions<br>
+            3. Copy the Bot Token here (looks like: 123456789:ABC...)<br>
+            <strong style="color: #f59e0b;">⚠️ Keep this private! This is YOUR personal bot.</strong>
+          </p>
+        </div>
+        <div class="input-group">
+          <label>🆔 Your Telegram User ID</label>
+          <input type="text" id="myTelegramChatIdInput" placeholder="Get from @myidbot">
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+            1. Message <code>@myidbot</code> on Telegram<br>
+            2. Start YOUR bot (the one you created)<br>
+            3. Copy your User ID here
+          </p>
+        </div>
+        <div class="input-group">
+          <label>🔗 Partner's Telegram User ID</label>
+          <input type="text" id="partnerTelegramChatIdInput" placeholder="Partner's User ID">
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+            Your partner does the same: message @myidbot, start YOUR bot, then share their User ID with you
+          </p>
+        </div>
+        <button id="saveTelegramConfigBtn" class="btn btn-primary">💾 Save Telegram Settings</button>
+        <button id="testTelegramBtn" class="btn btn-primary" style="margin-top: 0.5rem;">📤 Send Test Alert</button>
+        <div style="margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 12px;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span id="telegramStatusIcon" style="font-size: 1.5rem;">⚪</span>
+            <div>
+              <div id="telegramStatusText" style="font-weight: 600; color: var(--text-main);">Not Configured</div>
+              <div id="telegramStatusDetails" style="font-size: 0.85rem; color: var(--text-muted);">Create your bot with @BotFather, then enter details above</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telegram Accountability -->
+      <div class="card" style="background: rgba(34, 139, 230, 0.1); border-color: rgba(34, 139, 230, 0.3);">
+        <div class="card-header">
+          <div class="card-title">📱 Send Comparison Report</div>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">
+          Send a comparison report to your accountability partner via Telegram
+        </p>
+        
+        <button id="sendComparisonBtn" class="btn btn-primary" style="width: 100%;">
+          📊 Send Comparison Report to Partner
+        </button>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; text-align: center;">
+          Includes your current streak and blocks count
+        </p>
+      </div>
+      
+      <!-- Guardian Lock -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Guardian Lock</div>
+        </div>
+        <div class="toggle-wrapper">
+          <div>
+            <div class="toggle-label">Enable Guardian Lock</div>
+            <div class="toggle-desc">Prevent changes to settings without a PIN.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="enableGuardianLockCheckbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div id="guardianLockSettings" style="display: none;">
+          <div class="input-group">
+            <label>Set PIN</label>
+            <input type="password" id="guardianPinInput" placeholder="Enter 4-digit PIN">
+          </div>
+          <div class="input-group">
+            <label>Confirm PIN</label>
+            <input type="password" id="guardianPinConfirmInput" placeholder="Confirm PIN">
+          </div>
+          <div class="input-group">
+            <label>Recovery Email</label>
+            <input type="email" id="guardianRecoveryEmailInput" placeholder="For PIN recovery">
+          </div>
+          <button id="saveGuardianLockBtn" class="btn btn-primary">Save Lock Settings</button>
+        </div>
+        <div id="guardianLockSuccess" class="message success">Lock settings saved.</div>
+        <div id="guardianLockError" class="message error"></div>
+      </div>
+    </div>
+
+    <!-- Sadaqah Section -->
+    <div id="sadaqah" class="section">
+      <h1>💰 Sadaqah Pledge</h1>
+      <p class="subtitle">Commit to charity if you relapse. Choose your preferred charity and track your donations.</p>
+
+      <div class="card">
+        <div class="toggle-wrapper">
+          <div>
+            <div class="toggle-label">Enable Sadaqah Pledge</div>
+            <div class="toggle-desc">Automatically track owed charity on relapse.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="enableSadaqahCheckbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div id="sadaqahSettings" style="display: none;">
+          <div class="input-group">
+            <label>Pledge Amount ($)</label>
+            <select id="sadaqahAmountSelect">
+              <option value="1">1</option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div id="customAmountDiv" class="input-group" style="display: none;">
+            <label>Custom Amount</label>
+            <input type="number" id="customAmountInput" placeholder="Enter amount">
+          </div>
+          
+          <div class="input-group" style="margin-top: 20px;">
+            <label>🎯 Preferred Charity (Optional)</label>
+            <select id="preferredCharitySelect" style="padding: 12px; border-radius: 8px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(71, 85, 105, 0.5); color: #e2e8f0; font-size: 1rem;">
+              <option value="">-- Choose Where to Donate --</option>
+              <optgroup label="🌐 Online Charities">
+                <option value="LaunchGood">🌙 LaunchGood</option>
+                <option value="Islamic Relief USA">🤲 Islamic Relief USA</option>
+                <option value="Muslim Aid">❤️ Muslim Aid</option>
+                <option value="Penny Appeal">🎯 Penny Appeal</option>
+                <option value="Hidaya Foundation">🌍 Hidaya Foundation</option>
+                <option value="Helping Hand USA">🤝 Helping Hand USA</option>
+                <option value="UNICEF">🌟 UNICEF</option>
+                <option value="Doctors Without Borders">🩺 Doctors Without Borders</option>
+              </optgroup>
+              <optgroup label="🏘️ Local Giving">
+                <option value="Local Masjid">🕌 Local Masjid</option>
+                <option value="Islamic School">📚 Islamic School/Madrasa</option>
+                <option value="Community Food Bank">🍲 Community Food Bank</option>
+                <option value="Homeless Shelter">🏠 Homeless Shelter</option>
+              </optgroup>
+              <optgroup label="🎁 Sadaqah Jariyah (Ongoing Charity)">
+                <option value="Water Well Project">💧 Water Well Project</option>
+                <option value="Quran Distribution">📖 Quran Distribution</option>
+                <option value="Orphan Sponsorship">👶 Orphan Sponsorship</option>
+                <option value="Medical Treatment">🩺 Medical Treatment</option>
+              </optgroup>
+              <optgroup label="💚 Direct Giving">
+                <option value="Family Member in Need">👨‍👩‍👧 Family Member in Need</option>
+                <option value="Neighbor in Need">🏘️ Neighbor in Need</option>
+                <option value="Poor Person">🤲 Poor/Needy Person</option>
+              </optgroup>
+            </select>
+            <small style="color: #94a3b8; display: block; margin-top: 8px;">💡 Select your favorite charity. You can change this when making payment.</small>
+          </div>
+          
+          <button id="saveSadaqahBtn" class="btn btn-primary" style="margin-top: 15px;">Save Pledge</button>
+        </div>
+      </div>
+
+      <div class="card" id="sadaqahOwedSection">
+        <div class="card-header">
+          <div class="card-title">💰 Current Balance</div>
+        </div>
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="font-size: 3rem; font-weight: 800; color: var(--danger);">$<span id="sadaqahOwed">0</span></div>
+          <p style="color: #94a3b8; margin-top: 10px; font-size: 0.95rem;">Amount owed from relapses</p>
+        </div>
+        <button id="markPaidBtn" class="btn btn-primary" style="width: 100%;">💳 Mark as Paid</button>
+      </div>
+      
+      <!-- Quick Donation Links -->
+      <div class="card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3);">
+        <div class="card-header">
+          <div class="card-title">🌐 Quick Donation Links</div>
+        </div>
+        <p style="color: #94a3b8; margin-bottom: 20px; font-size: 0.95rem;">Donate directly through these trusted platforms</p>
+        
+        <div style="display: grid; gap: 12px;">
+          <a href="https://launchgood.com" target="_blank" style="padding: 12px 16px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; color: #10b981; text-decoration: none; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+            <span>🌙 LaunchGood - Muslim Crowdfunding</span>
+            <span style="font-size: 1.2rem;">→</span>
+          </a>
+          
+          <a href="https://www.islamic-relief.org" target="_blank" style="padding: 12px 16px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; color: #3b82f6; text-decoration: none; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+            <span>🤲 Islamic Relief USA - Global Aid</span>
+            <span style="font-size: 1.2rem;">→</span>
+          </a>
+          
+          <a href="https://muslimaid.org" target="_blank" style="padding: 12px 16px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; color: #8b5cf6; text-decoration: none; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+            <span>❤️ Muslim Aid - Emergency Relief</span>
+            <span style="font-size: 1.2rem;">→</span>
+          </a>
+          
+          <a href="https://www.islamic-relief.org/water-wells/" target="_blank" style="padding: 12px 16px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; color: #f59e0b; text-decoration: none; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+            <span>💧 Water Wells - Sadaqah Jariyah</span>
+            <span style="font-size: 1.2rem;">→</span>
+          </a>
+        </div>
+        
+        <button id="openSadaqahTrackerBtn" style="margin-top: 20px; width: 100%; padding: 14px; background: linear-gradient(135deg, #10b981, #3b82f6); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+          📊 Open Full Sadaqah Tracker →
+        </button>
+      </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div id="settings" class="section">
+      <h1>⚙️ General Settings</h1>
+      <p class="subtitle">Customize how the extension works. Control blocking behavior, audio playback, and visual themes.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🎵 Block Page Settings</div>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          These settings control what appears when a site is blocked.
+        </p>
+        
+        <div class="toggle-wrapper">
+          <div>
+            <div class="toggle-label">Enable Quran Audio</div>
+            <div class="toggle-desc">Show audio player for Quran verses on the block page.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="enableAudioCheckbox" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-wrapper">
+          <div>
+            <div class="toggle-label">Autoplay Quran Audio</div>
+            <div class="toggle-desc">Automatically play Quran recitation when a Quran verse appears (must enable audio above).</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="autoplayAudioCheckbox" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="input-group">
+          <label>Reminder Type</label>
+          <select id="reminderTypeSelect">
+            <option value="both">Both Quran & Hadith</option>
+            <option value="quran">Quran Only</option>
+            <option value="hadith">Hadith Only</option>
+          </select>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Choose what type of Islamic reminders appear on the block page.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🔔 Notifications & Behavior</div>
+        </div>
+        
+        <div class="toggle-wrapper">
+          <div>
+            <div class="toggle-label">Block Incognito Mode</div>
+            <div class="toggle-desc">Prevent access to incognito/private browsing windows (requires permission).</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="blockIncognitoCheckbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-wrapper">
+          <div>
+            <div class="toggle-label">Enable Notifications</div>
+            <div class="toggle-desc">Get notified when a harmful site is blocked.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="enableNotificationsCheckbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-wrapper">
+          <div>
+            <div class="toggle-label">Streak Notifications</div>
+            <div class="toggle-desc">Celebrate streak milestones with notifications (Day 1, Week 1, etc.).</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="enableStreakNotificationsCheckbox">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🎨 Visual Theme</div>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          Choose a color theme for the block page. This changes the colors and mood of the page you see when a site is blocked.
+        </p>
+        
+        <div class="input-group">
+          <label>Block Page Theme</label>
+          <select id="themeSelect">
+            <option value="dark">Modern Dark (Default)</option>
+            <option value="light">Light & Clean</option>
+            <option value="islamic">Islamic Green</option>
+            <option value="ocean">Ocean Blue</option>
+            <option value="sunset">Sunset Orange</option>
+            <option value="forest">Forest Green</option>
+            <option value="royal">Royal Purple</option>
+            <option value="rose">Rose Pink</option>
+          </select>
+        </div>
+
+        <button id="saveSettingsBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">💾 Save All Settings</button>
+        <div id="settingsSuccess" class="message success" style="margin-top: 1rem;">Settings saved successfully.</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Danger Zone</div>
+        </div>
+        <button id="showUninstallWarningBtn" class="btn btn-danger" style="width: 100%;">Uninstall Extension</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory Journal Modal -->
+  <div id="victoryJournalBackdrop" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9998;"></div>
+  <div id="victoryJournalModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border-radius: 20px; padding: 2rem; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; z-index: 9999; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <h2 style="margin: 0; font-size: 1.75rem; background: linear-gradient(135deg, #10b981, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📖 Victory Journal</h2>
+      <button id="closeVictoryJournalBtn" style="background: transparent; border: none; font-size: 2rem; cursor: pointer; color: var(--text-muted); padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s;">&times;</button>
+    </div>
+    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">All your logged victories and notes celebrating your journey to purity.</p>
+    <div id="victoryLogContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+      <!-- Victory entries will be dynamically inserted here -->
+    </div>
+    <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+      <button id="clearVictoryLogBtn" class="btn btn-danger" style="padding: 0.75rem 1.5rem;">Clear Journal</button>
+    </div>
+  </div>
+
+  <!-- PocketBase bootstrap and client -->
+  <script src="managed_credentials.js"></script>
+  <script src="pocketbase_client.js"></script>
+  <!-- Include Telegram Client -->
+  <script src="telegram_client.js"></script>
+  <!-- Main Options Script -->
+  <script src="options.js"></script>
+</body>
+</html>

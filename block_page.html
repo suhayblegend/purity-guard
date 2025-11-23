@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Gentle Reminder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(148, 163, 184, 0.1);
+      --primary: #6366f1;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #8b5cf6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated Background */
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      z-index: -1;
+      opacity: 0.4;
+      animation: float 20s infinite ease-in-out;
+    }
+    .orb-1 { top: -20%; left: -10%; width: 600px; height: 600px; background: #4f46e5; }
+    .orb-2 { bottom: -20%; right: -10%; width: 700px; height: 700px; background: #7c3aed; animation-delay: -5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, -30px); }
+    }
+
+    /* Hero Section */
+    .hero-section {
+      text-align: center;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .hero-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Verse Card */
+    .verse-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 3rem;
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 3rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      animation: slideUp 0.8s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .verse-container::before {
+      content: '"';
+      position: absolute;
+      top: 1rem;
+      left: 2rem;
+      font-size: 8rem;
+      color: rgba(255, 255, 255, 0.05);
+      font-family: serif;
+    }
+
+    .verse-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 2.5rem;
+      line-height: 1.8;
+      color: #e2e8f0;
+      margin-bottom: 1.5rem;
+      direction: rtl;
+    }
+
+    .verse-translation {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .verse-source {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Stats Grid */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 900px;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .stat-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #818cf8, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Timer */
+    .timer-container {
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .timer-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 auto 1rem;
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .timer-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Celebration Overlay */
+    #celebrationOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      display: none;
+    }
+
+    #celebrationCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .celebration-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10000;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .celebration-title {
+      font-size: 5rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .celebration-subtitle {
+      font-size: 2rem;
+      color: #e2e8f0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Theme Overrides (Preserving functionality) */
+    body.sunset-theme {
+      background: linear-gradient(135deg, #431407, #7c2d12);
+    }
+    body.forest-theme {
+      background: linear-gradient(135deg, #052e16, #14532d);
+    }
+    body.ocean-theme {
+      background: linear-gradient(135deg, #0c4a6e, #0369a1);
+    }
+    body.light-theme {
+      background: #f8fafc;
+      color: #1e293b;
+    }
+    body.light-theme .verse-container,
+    body.light-theme .stat-card {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    body.light-theme .hero-title {
+      background: linear-gradient(135deg, #1e293b, #475569);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Sadaqah Debt Warning Card */
+    .debt-warning {
+      background: linear-gradient(135deg, rgba(251, 146, 60, 0.15), rgba(239, 68, 68, 0.15));
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(251, 146, 60, 0.4);
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 900px;
+      width: 100%;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(251, 146, 60, 0.2);
+      animation: slideUp 0.6s ease-out 0.3s both;
+      text-align: center;
+    }
+
+    .debt-warning.hidden {
+      display: none;
+    }
+
+    .debt-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: pulse 2s infinite;
+    }
+
+    .debt-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #fb923c;
+      margin-bottom: 0.75rem;
+    }
+
+    .debt-amount {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fb923c, #ef4444);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .debt-message {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .debt-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-pay-now {
+      padding: 0.875rem 1.75rem;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #fb923c, #ef4444);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .btn-pay-now:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(251, 146, 60, 0.4);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <!-- Celebration Overlay -->
+  <div id="celebrationOverlay">
+    <canvas id="celebrationCanvas"></canvas>
+    <div class="celebration-message">
+      <div class="celebration-title">VICTORY!</div>
+      <div class="celebration-subtitle">Streak Milestone Reached</div>
+    </div>
+  </div>
+
+  <div class="hero-section">
+    <div class="hero-icon">🛡️</div>
+    <h1 class="hero-title">You Hit A Dangerous Detour</h1>
+    <p class="hero-subtitle">Pause, breathe, and step away for two minutes. Allah loves those who restrain their desires.</p>
+  </div>
+
+  <div class="verse-container">
+    <div class="verse-arabic">قُلْ لِلْمُؤْمِنِينَ يَغُضُّوا۟ مِنْ أَبْصَـٰرِهِمْ</div>
+    <div class="verse-translation">"Tell the believing men to lower their gaze and guard their private parts."</div>
+    <div class="verse-source">An-Nur 24:30</div>
+    
+    <!-- Audio Controls -->
+    <div class="audio-controls" style="display: none; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem;">
+        <button id="playAudioBtn" class="audio-btn" style="background: var(--primary); border: none; border-radius: 50%; width: 40px; height: 40px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+        <span id="audioStatus" style="font-size: 0.85rem; color: var(--text-muted);"></span>
+    </div>
+  </div>
+
+  <!-- Sadaqah Debt Warning (shown only if user owes money) -->
+  <div class="debt-warning hidden" id="debtWarning">
+    <div class="debt-icon">💰</div>
+    <div class="debt-title">⚠️ Sadaqah Commitment Alert</div>
+    <div class="debt-amount" id="debtAmount">$0.00</div>
+    <div class="debt-message">
+      You pledged to donate when tempted. <strong>This is your opportunity to fulfill your commitment to Allah.</strong><br>
+      Don't forget - paying promptly earns you more blessings!
+    </div>
+    <div class="debt-actions">
+      <button id="payNowBtn" class="btn-pay-now">
+        💳 Pay Sadaqah Now
+      </button>
+      <button id="remindLaterBtn" class="btn-outline" style="padding: 0.875rem 1.75rem; border-radius: 12px; border: 2px solid rgba(251, 146, 60, 0.3); background: transparent; color: var(--text-main); font-weight: 600; cursor: pointer; font-family: inherit; font-size: 1rem;">
+        ⏰ Remind Me Later
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-value" id="streak">0</div>
+      <div class="stat-label">Current Streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="counter">0</div>
+      <div class="stat-label">Total Blocks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="achievement">Beginner</div>
+      <div class="stat-label">Rank</div>
+    </div>
+  </div>
+
+  <div class="timer-container">
+    <div class="timer-circle" id="timer">2:00</div>
+    <div class="timer-label">Time to reflect</div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem;">
+    <button id="logVictoryBtn" class="btn-primary" style="padding: 0.875rem 1.75rem; border-radius: 12px; border: none; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 1rem;">
+      📓 Log This Victory
+    </button>
+    <button id="viewJournalBtn" class="btn-outline" style="padding: 0.875rem 1.75rem; border-radius: 12px; border: 2px solid rgba(99, 102, 241, 0.3); background: transparent; color: var(--text-main); font-weight: 600; cursor: pointer; font-family: inherit; font-size: 1rem;">
+      📖 View Victory Journal
+    </button>
+  </div>
+
+  <!-- Toast for victory logged -->
+  <div id="victoryToast" style="display: none; position: fixed; top: 20px; right: 20px; background: rgba(16, 185, 129, 0.95); color: white; padding: 1rem 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-weight: 600; z-index: 9999; animation: slideIn 0.3s ease-out;">
+    ✅ Victory logged!
+  </div>
+
+  <!-- Celebration overlay -->
+  <div id="victoryCelebration" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 9999;"></div>
+
+  <!-- Hidden elements for JS compatibility if needed -->
+  <div id="goalSetup" style="display: none;"></div>
+
+  <script src="block_page.js"></script>
+</body>
+</html>

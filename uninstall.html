@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wait... Are You Sure?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e2e8f0;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 600px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .message {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+        }
+        
+        .message p {
+            margin-bottom: 1rem;
+        }
+        
+        .highlight {
+            color: #fbbf24;
+            font-weight: 700;
+        }
+        
+        .verse {
+            background: rgba(251, 191, 36, 0.1);
+            border-left: 4px solid #fbbf24;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0.5rem;
+            font-style: italic;
+            color: #fde68a;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn-keep {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-keep:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-remove {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 2px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-remove:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(51, 65, 85, 0.3);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fbbf24;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 0.5rem;
+        }
+        
+        .reminder {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            color: #fca5a5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">⛔</div>
+        <h1>Wait... Are You Sure?</h1>
+        
+        <div class="message">
+            <p><span class="highlight">Allah ﷻ sees your struggle.</span></p>
+            <p>Removing this protection means going back to sin.</p>
+            <p>Every second you stay strong, <span class="highlight">you earn reward.</span></p>
+            <p>Do you really want to remove the wall that keeps you safe?</p>
+        </div>
+        
+        <div class="verse">
+            "And whoever is patient and forgives – indeed, that is of the matters requiring determination."
+            <br><br>
+            <strong>— Quran 42:43</strong>
+        </div>
+        
+        <div class="stats" id="statsContainer">
+            <div class="stat-card">
+                <div class="stat-value" id="streakValue">0</div>
+                <div class="stat-label">Days Clean</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="blocksValue">0</div>
+                <div class="stat-label">Blocks Saved You</div>
+            </div>
+        </div>
+        
+        <div class="reminder" id="sadaqahReminder" style="display: none;">
+            <strong>⚠️ You still owe Sadaqah!</strong>
+            <p style="margin-top: 0.5rem;">Don't forget your charity commitment before leaving.</p>
+            <p style="font-size: 1.5rem; font-weight: 800; margin-top: 0.5rem;" id="sadaqahAmount">$0</p>
+        </div>
+        
+        <div class="buttons">
+            <button class="btn btn-keep" id="keepBtn">
+                ✅ Keep My Protection
+            </button>
+            <button class="btn btn-remove" id="removeBtn">
+                ❌ Remove Anyway
+            </button>
+        </div>
+    </div>
+    
+    <script src="uninstall.js"></script>
+</body>
+</html>
