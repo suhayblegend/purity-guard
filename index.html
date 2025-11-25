@@ -25,13 +25,13 @@
     
     html { 
       scroll-behavior: smooth; 
-      /* FIX: Background color on HTML prevents white flash during fast scrolls */
+      /* FIX 1: Solid background color behind the gradient to prevent white flashes */
       background-color: var(--bg-dark);
     }
     
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      /* FIX: Fixed background attachment prevents repainting glitches */
+      /* FIX 2: Fixed background to stabilize rendering */
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) fixed;
       color: var(--text-main);
       line-height: 1.8;
@@ -301,7 +301,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      will-change: transform; /* Performance Fix */
+      /* FIX 3: Removed "will-change" to prevent text disappearing bugs */
       animation: border-pulse-glow 4s infinite ease-in-out;
     }
 
@@ -516,10 +516,10 @@
 
     /* Scroll Reveal Utility */
     .reveal { 
-        opacity: 0; 
-        transform: translateY(30px); 
-        transition: all 0.8s ease-out; 
-        will-change: transform, opacity; /* Performance Fix */
+      opacity: 0; 
+      transform: translateY(30px); 
+      transition: all 0.8s ease-out; 
+      /* Removed problematic performance tag that was hiding text */
     }
     .reveal.active { opacity: 1; transform: translateY(0); }
   </style>
@@ -680,7 +680,7 @@
           <div class="step-number">1</div>
           <h3 style="color: white; margin-bottom: 0.5rem;">Download Extension</h3>
           <p style="color: var(--text-muted);">
-            <a href="https://chromewebstore.google.com/detail/kdjbmnmfppgifnpaoediclncglnogihe?utm_source=item-share-cb" class="install-link-text" target="_blank">Click here to download</a> the extension directly from the Chrome Web Store.
+            <a href="https://chromewebstore.google.com/detail/kdjbmnmfppgifnpaoediclncglnogihe?utm_source=item-share-cb" class="install-link-text" target="_blank">Download Purity Guard</a> from the Chrome Web Store.
           </p>
         </div>
         
